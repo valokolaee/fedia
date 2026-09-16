@@ -18,7 +18,7 @@ export default function PeriodCard({ lastPeriodDate, nextPeriodDate, width }: Pr
   // به‌جای aspectRatio (که رو اندروید وقتی همه‌ی بچه‌ها absolute هستن
   // گاهی ارتفاع رو درست حساب نمی‌کنه)، عرض واقعی رو با onLayout
   // اندازه می‌گیریم و خودمون ارتفاع متناسب رو حساب می‌کنیم.
-  const [measuredWidth, setMeasuredWidth] = useState(width * 2 ?? 0);
+  const [measuredWidth, setMeasuredWidth] = useState(width! * 2 || 0);
 
   const onLayout = useCallback(
     (e: LayoutChangeEvent) => {
@@ -41,12 +41,14 @@ export default function PeriodCard({ lastPeriodDate, nextPeriodDate, width }: Pr
         { height },
       ]}
     >
+      {/* <CIconGenerator xml={SVGstor.bloodDrop} size={measuredWidth} color='red' /> */}
       {measuredWidth > 0 && (
         <>
           {/* بک‌گراند: دقیقاً همون Path که فرستادی */}
+
           <Svg
             width={measuredWidth}
-            height={height}
+            height={height * 0.95}
             viewBox={`0 0 ${VB_WIDTH} ${VB_HEIGHT}`}
             style={StyleSheet.absoluteFill}
           >
@@ -78,14 +80,23 @@ export default function PeriodCard({ lastPeriodDate, nextPeriodDate, width }: Pr
             style={[
               styles.iconWrapper,
               {
-                left: measuredWidth / 2 - ICON_SIZE / 2,
+
+                width: measuredWidth / 16,
+                height: measuredWidth / 16,
+                left: measuredWidth / 2 - (measuredWidth / 16) / 2,
                 top: (25 / VB_HEIGHT) * height - ICON_SIZE / 2,
               },
             ]}
             pointerEvents="none"
           >
-            <View style={styles.iconGlow} />
-            <Ionicons name="water" size={22} color="#FF4C6A" />
+            <View style={[
+              styles.iconGlow,
+              {
+                width: measuredWidth / 20,
+                height: measuredWidth / 20,
+              }
+            ]} />
+            <Ionicons name="water" size={measuredWidth / 20} color="#FF4C6A" />
           </View>
         </>
       )}
@@ -136,10 +147,9 @@ const styles = StyleSheet.create({
   },
   iconWrapper: {
     position: 'absolute',
-    width: ICON_SIZE,
-    height: ICON_SIZE,
-    borderRadius: ICON_SIZE / 2,
-    backgroundColor: '#FFFFFF',
+
+    borderRadius: 500,
+    // backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -157,9 +167,8 @@ const styles = StyleSheet.create({
   },
   iconGlow: {
     position: 'absolute',
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+
+    borderRadius: 500,
     backgroundColor: 'rgba(255,76,106,0.12)',
   },
 });

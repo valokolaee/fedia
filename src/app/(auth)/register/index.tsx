@@ -6,24 +6,60 @@ import IRadioGroup from "@/components/myComponents/CRadioButton/IRadioGroup"
 import CText from "@/components/myComponents/CText"
 import CTextInput from "@/components/myComponents/CTextInput"
 import { Spacing } from "@/constants/theme"
+import { setTokenResponseDtoSlice, setUser } from "@/redux/actions"
+import { convertPersianArabicDigitsToLatin, sanitizeIranianMobileInput } from "@/utils/mobilNumber.utils"
+import { useApi } from "@/webService/hooks/useApi"
+import { apis, RegisterDto } from "@/webService/periodcycleApis"
 import { useRouter } from "expo-router"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import BirthDate from "./birthDate"
 
 
 export default () => {
-  const [_marital, set_marital] = useState<IRadioGroup['info']>()
   const router = useRouter()
+  const { callApi, Loader } = useApi();
+  const [_marital, set_marital] = useState<IRadioGroup['info']>()
+  const [_registerDto, set_registerDto] = useState<RegisterDto | undefined>()
+
+  const { birthDate, email, firstName, lastName, maritalStatus, mobile, pin } = _registerDto || {}
+
+  const _submit = async () => {
+
+    const _t: RegisterDto = { ..._registerDto, maritalStatus: _marital?.type! } as RegisterDto
+    console.log(_t);
+ 
+    const res = await callApi(apis.auth.register(_t));
+    if (res.success) {
+
+      setTokenResponseDtoSlice(res.data)
+      setUser({ mobile: _t.mobile, pin: _t.pin })
+      _navTo()
+    }
+    console.log(res);
 
 
+  }
 
 
   const _navTo = () => {
-    router.replace('/(auth)/Question1Screen')
+    router.replace('/(auth)/QuestionsScreen')
   }
+
+
+
+  const set = (k: string) => (v: string) => {
+
+
+    set_registerDto((p: any) => ({ ...p, [k]: v }));
+
+
+  }
+
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, gap: Spacing.two, padding: Spacing.four, backgroundColor: 'white' }}>
+      {Loader}
       <View style={{ flex: 1 }}>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -32,17 +68,36 @@ export default () => {
 
         <CText textAlign="center" text={'عضویت در سامانه خودارزیابی سلامت قاعدگی'} fontWeight={'900'} fontSize={50} />
 
-        <CTextInput label="نام" placeHolder="نام خود را وارد کنید" style={defStyle.textInput} />
+        <CTextInput value={firstName} onChangeText={set('firstName')} label="نام" placeHolder="نام خود را وارد کنید" style={defStyle.textInput} />
 
-        <CTextInput label="شماره موبایل" placeHolder="۰۹۱۲۳۴۵۶۷۸" iconSvg={SVGstor.mobile} txtStyle={defStyle.txtStyle} />
+        <CTextInput
+          value={mobile}
+          // value={sanitizeIranianMobileInput(mobile!)}
+          onChangeText={(v) => set('mobile')(
+            sanitizeIranianMobileInput(convertPersianArabicDigitsToLatin(v))
+            //                          ↑ این باید اول اجرا بشه
+            // convertPersianArabicDigitsToLatin(
+            // sanitizeIranianMobileInput(v))
 
-        <CRadioButton title="وضعیت تاهل" ListRadio={list} horizontal style={{ marginTop: Spacing.four }} onSelect={set_marital} selectedItem={_marital} />
+          )}
+          style={defStyle.textInput}
+          label="شماره موبایل"
+          keyboardType="phone-pad"
+          placeHolder="۰۹۱۲۳۴۵۶۷۸" iconSvg={SVGstor.mobile} txtStyle={defStyle.txtStyle} />
 
-        <BirthDate />
+        <CTextInput value={pin} onChangeText={set('pin')} label="گذرواژه"
+          keyboardType="visible-password"
+          placeHolder="گذرواژه خود را وارد کنید" style={defStyle.textInput} />
+        <CTextInput value={email} onChangeText={set('email')} label="ایمیل"
+          keyboardType="visible-password"
+          placeHolder="ایمیل خود را وارد کنید" style={defStyle.textInput} />
+        <CRadioButton title="وضعیت تاهل" ListRadio={maritalStatusList} horizontal style={{ marginTop: Spacing.four }} onSelect={set_marital} selectedItem={_marital} />
+
+        <BirthDate onChange={set('birthDate')} />
 
       </View>
 
-      <CButton text="ثبت عضویت" iconRtl onPress={_navTo} />
+      <CButton text="ثبت عضویت" iconRtl onPress={_submit} />
 
     </View>
   )
@@ -93,9 +148,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-const list: IRadioGroup['ListRadio'] = [
-  { value: 'مجرد' },
-  { value: 'متاهل' },
-  { value: 'بیوه' },
-  { value: 'مطلقه' },
+export const maritalStatusList: IRadioGroup['ListRadio'] = [
+  { value: 'مجرد', type: 'single' },
+  { value: 'متاهل', type: 'married' },
+  { value: 'بیوه', type: 'widow' },
+  { value: 'مطلقه', type: 'divorced' },
 ]

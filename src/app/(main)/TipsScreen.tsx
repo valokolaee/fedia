@@ -22,6 +22,7 @@ const TIPS = [
 
 export default function TipsScreen({ navigation }: any) {
   var { width } = useWindowDimensions();
+
   width = width / 2.3
   return (
     <View style={s.container}>
@@ -41,7 +42,7 @@ export default function TipsScreen({ navigation }: any) {
                 <CIconGenerator xml={tipsIcon.flower} size={80} color={t.color + 70} />
               </View>
               <View style={[s.top, { backgroundColor: t.color + 70, borderWidth: 1, borderColor: t.color }]}>
-                <CIconGenerator xml={t.icon} size={35} />
+                <CIconGenerator xml={t.icon} size={width / 4} />
               </View>
               <AppText style={s.text}>{t.title}</AppText>
 

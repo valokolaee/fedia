@@ -4,15 +4,17 @@ import SVGstor from '@/components/myComponents/CIconGenerator/SVGstor';
 import CText from '@/components/myComponents/CText';
 import PeriodCard from '@/components/PeriodCardSvgBg';
 // import PeriodCard from '@/components/PeriodCard';
-import PeriodDateCard from '@/components/PeriodDateCard';
 import { AppText } from '@/components/ui';
 import { colors } from '@/theme';
-import { addDays, daysBetween, faDate, faDateShort, jalaliToJs } from '@/utils/cycle';
+import { addDays, daysBetween, faDate, jalaliToJs } from '@/utils/cycle';
 import { toFa } from '@/utils/fa';
+import WebService, { IWebServiceFuncs } from '@/webService';
+import { useApi } from '@/webService/hooks/useApi';
+import { apis } from '@/webService/periodcycleApis';
 import { Ionicons } from '@expo/vector-icons';
+import { useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-
-
+ 
 const Legend = ({ color, label }: any) => (
   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
     <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: color }} />
@@ -21,9 +23,13 @@ const Legend = ({ color, label }: any) => (
 );
 
 export default function HomeScreen({ navigation, route }: any) {
+  const refWebService = useRef<IWebServiceFuncs>(null)
+  const { callApi,Loader } = useApi();
+
+
   const p = route?.params ?? {};
   const cycleLength = p.cycleLength ?? 28;
-  const periodLength = p.duration ?? 5;
+  const periodLength = p.duration ?? 7;
   const last = p.lastPeriod ?? { year: 1402, month: 4, day: 20 };
 
   const lastDate = jalaliToJs(last.year, last.month, last.day);
@@ -34,16 +40,60 @@ export default function HomeScreen({ navigation, route }: any) {
   const daysToNext = cycleLength - todayIndex;
   const centerTitle = daysToOv > 0 ? `${toFa(daysToOv)} روز\nتا تخمک گذاری` : `${toFa(daysToNext)} روز\nتا پریود بعدی`;
 
+
+  const _tst = async () => {
+
+    
+    const res = await callApi(
+      apis.auth.register({
+      birthDate: '1402/01/01',
+      firstName: 'mariam2',
+      lastName: 'alizadeh2',
+      pin: '12345678',
+      email: 'c2@g.com', // leading space removed
+      maritalStatus: 'single',
+      mobile: '09123456789',
+    }));
+    
+
+
+    
+    console.log(res);
+    }
+  
+
+
+
+
+
+  // const { callApi, isLoading } = useApi();
+  // const [articles, setArticles] = useState<ArticleResponseDto[]>([]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const res = await callApi(apis.articles.list('Public'));
+  //     if (res.success) setArticles(res.data);
+  //     // res.data is typed as ArticleResponseDto[] — inferred, no manual generic
+  //   })();
+  // }, []);
+
+
   return (
     <View style={s.container}>
+
+      {Loader}
+
+      <TouchableOpacity onPress={_tst}>
+        <Ionicons name="ellipsis-vertical" size={20} color={colors.ink} />
+        {'cvhjiuhgjkjhg'}
+      </TouchableOpacity>
+
       <View style={s.header}>
         <View style={s.user}>
           <View style={s.avatar}><AppText style={{ color: '#fff', fontSize: 14 }}>م</AppText></View>
           <AppText style={{ fontFamily: 'Vazirmatn-Bold', fontSize: 13 }}>{`${p.first ?? 'مریم'} ${p.last ?? 'علیزاده'}`}</AppText>
         </View>
         <View style={s.headerIcons}>
-
-          {/* <CIconGenerator xml={SVGstor.bloodDrop} /> */}
 
           <Ionicons name="headset-outline" size={20} color={colors.ink} />
           <TouchableOpacity onPress={() => navigation.navigate('Menu')}>
@@ -54,25 +104,7 @@ export default function HomeScreen({ navigation, route }: any) {
 
       <ScrollView contentContainerStyle={s.body}>
         <PeriodCard lastPeriodDate="۲۰ تیر" nextPeriodDate="۲۰ مرداد" />
-        {/* <PeriodDateCard lastPeriodDate="۲۰ تیر" nextPeriodDate="۲۰ مرداد" /> */}
-        {/* <PeriodCard
-          lastPeriod='u'
-          nextPeriod='o'
-        />
-      */}
-        {/* <View style={s.cards}>
-          <View style={s.card}>
-            <AppText style={s.cardBig}>{faDateShort(lastDate)}</AppText>
-            <AppText style={s.cardSmall}>تاریخ آخرین پریود قبلی</AppText>
-          </View>
-          <View style={s.cardDrop}>
-        
-          </View>
-          <View style={s.card}>
-            <AppText style={s.cardBig}>{faDateShort(nextDate)}</AppText>
-            <AppText style={s.cardSmall}>تاریخ پریود بعدی</AppText>
-          </View>
-        </View> */}
+
 
         <View style={s.legend}>
           <Legend color={colors.primary} label="پریودی" />
@@ -84,17 +116,17 @@ export default function HomeScreen({ navigation, route }: any) {
           todayIndex={todayIndex} centerTitle={centerTitle} centerDate={faDate(new Date())} />
 
         <View style={s.actions}>
-        
+
           <TouchableOpacity style={s.actGhost} onPress={() => navigation.navigate('AddSymptoms')}>
             <CIconGenerator xml={SVGstor.plusCircle} size={50} />
-            <CText style={{ fontSize: 12 }} text={'افزودن علائم امروز'} />            
+            <CText style={{ fontSize: 12 }} text={'افزودن علائم امروز'} />
           </TouchableOpacity>
-        
+
           <TouchableOpacity style={s.actPrimary} onPress={() => navigation.navigate('EditPeriod')}>
             <CIconGenerator xml={SVGstor.bloodDropCircle} size={50} />
-            <CText style={{ fontSize: 12 }} text={'ویرایش پریود'}/>
+            <CText style={{ fontSize: 12 }} text={'ویرایش پریود'} />
           </TouchableOpacity>
-        
+
         </View>
 
         <View style={s.banner}>
@@ -102,6 +134,8 @@ export default function HomeScreen({ navigation, route }: any) {
           <AppText style={{ fontSize: 12 }}>{toFa(daysToNext)} روز مانده به دوره ی بعدی شما</AppText>
         </View>
       </ScrollView>
+
+      <WebService ref={refWebService} />
     </View>
   );
 }
@@ -120,7 +154,7 @@ const s = StyleSheet.create({
   cardDrop: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
   legend: { flexDirection: 'row', gap: 16, marginVertical: 18 },
   actions: { flexDirection: 'row', gap: 12, marginVertical: 20 },
-  actPrimary: {   gap: 6,   borderRadius: 999, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center' },
-  actGhost: {  gap: 6,   borderRadius: 999, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center' },
+  actPrimary: { gap: 6, borderRadius: 999, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center' },
+  actGhost: { gap: 6, borderRadius: 999, paddingVertical: 10, paddingHorizontal: 16, alignItems: 'center' },
   banner: { flexDirection: 'row', gap: 8, backgroundColor: colors.primarySoft, borderRadius: 12, paddingVertical: 12, paddingHorizontal: 20, alignItems: 'center' },
 });

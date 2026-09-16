@@ -30,8 +30,8 @@ export const Dropdown = ({ placeholder, options, value, onChange, style }: any) 
             <FlatList
               data={options}
               keyExtractor={(o) => String(o)}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={[s.item, item === value && s.itemOn]} onPress={() => { onChange(item); setOpen(false); }}>
+              renderItem={({ item,index }) => (
+                <TouchableOpacity style={[s.item, item === value && s.itemOn]} onPress={() => { onChange(item,index); setOpen(false); }}>
                   <AppText style={{ fontSize: 13 }}>{toFa(item)}</AppText>
                 </TouchableOpacity>
               )}

@@ -1,15 +1,17 @@
 import { Button } from '@/components/Form';
 import { AppText, ScreenHeader } from '@/components/ui';
 import { colors } from '@/theme';
+import { useRoute, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
 
 export default function CommentScreen({ navigation }: any) {
   const [msg, setMsg] = useState('');
+  const router=useRouter()
   return (
     <View style={s.container}>
-      <ScreenHeader title="ثبت نظر شما برای این مقاله" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="ثبت نظر شما برای این مقاله" onBack={() => router.back()} />
       <View style={s.body}>
         <AppText style={s.label}>پیام</AppText>
         <TextInput multiline textAlignVertical="top" style={s.area} value={msg} onChangeText={setMsg} placeholder="متن پیام خود را وارد کنید" placeholderTextColor={colors.sub} />

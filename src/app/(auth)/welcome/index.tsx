@@ -10,7 +10,7 @@ export default () => {
   const router = useRouter();
 
   const _navTo = () => {
-    router.replace('/(main)/HomeScreen');
+    router.replace('/(auth)/login');
   }
 
   useEffect(() => {

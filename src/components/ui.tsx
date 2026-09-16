@@ -5,10 +5,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors, } from '../theme';
 import CIconGenerator from './myComponents/CIconGenerator';
 import SVGstor from './myComponents/CIconGenerator/SVGstor';
+import { Bardiya } from '@/assets/fonts/fonts';
 
 
 export const AppText = ({ style, ...p }: any) => (
-  <Text style={[{ color: colors.ink, fontFamily: 'Vazirmatn-Regular' }, style]} {...p} />
+  <Text style={[{ color: colors.ink, fontFamily: Bardiya.norm }, style]} {...p} />
 );
 
 export const ScreenHeader = ({ title, onBack }: any) => (
@@ -16,10 +17,9 @@ export const ScreenHeader = ({ title, onBack }: any) => (
     style={s.header}
   >
     <TouchableOpacity onPress={onBack}>
-      {/* <Ionicons name="left`" /> */}
       <CIconGenerator xml={SVGstor.directions.leftChevron} color='black' />
     </TouchableOpacity>
-    <AppText style={{ fontFamily: 'Vazirmatn-Bold' }}>{title}</AppText>
+    <AppText style={{ fontFamily: 'Vazirmatn-Bold' }} >{title}</AppText>
     <View />
   </View>
 );
@@ -58,16 +58,8 @@ export const OptionRow = ({ label, selected, onPress, icon }: any) => (
   </TouchableOpacity>
 );
 
-export const NavArrows = ({ onBack, onNext }: any) => (
-  <View style={s.navRow}>
-    <TouchableOpacity style={[s.navBtn]} onPress={onBack}>
-      <Ionicons name="arrow-forward" size={17} color="#777" /> 
-    </TouchableOpacity>
-    <TouchableOpacity style={[s.navBtn, { borderColor: colors.primary }]} onPress={onNext}>
-      <Ionicons name="arrow-back" size={17} color={colors.primary} />  
-    </TouchableOpacity>
-  </View>
-);
+
+
 
 const s = StyleSheet.create({
   header: {
@@ -85,6 +77,5 @@ const s = StyleSheet.create({
   radio: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, borderColor: '#C9CED4', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' },
   radioOn: { borderColor: colors.primary },
   badge: { width: 26, height: 26, borderRadius: 13, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
-  navRow: { flexDirection: 'row', justifyContent: 'flex-end', gap: 10, padding: 16 },
-  navBtn: { width: 38, height: 38, borderRadius: 19, borderWidth: 1, borderColor: '#9AA0A6', alignItems: 'center', justifyContent: 'center' },
+
 });

@@ -1,10 +1,9 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { AppText } from './ui';
-import { colors } from '../theme';
-import { toFa, range } from '../utils/fa';
 import { phaseOf } from '@/utils/cycle';
- 
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { colors } from '../theme';
+import { range, toFa } from '../utils/fa';
+import { AppText } from './ui';
+
 export const PHASE_COLOR: any = {
   period: colors.periodRed,
   ovulation: colors.teal,
@@ -12,7 +11,9 @@ export const PHASE_COLOR: any = {
   normal: '#C9CDD3',
 };
 
-export default function CycleRing({ cycleLength, periodLength, todayIndex, centerTitle, centerDate, size = 300 }: any) {
+export default function CycleRing({ cycleLength, periodLength, todayIndex, centerTitle, centerDate, }: any) {
+  const size = useWindowDimensions().width * 0.8
+
   const c = size / 2;
   const R = c - 18;
   const bubble = size * 0.55;
@@ -22,16 +23,18 @@ export default function CycleRing({ cycleLength, periodLength, todayIndex, cente
     <View style={{ width: size, height: size }}>
       {range(0, cycleLength - 1).map((i) => {
         const isToday = i === todayIndex;
-        const d = isToday ? 30 : 7;
+        const d = isToday ? 30 : size / 35;
         const a = (i / cycleLength) * 2 * Math.PI - Math.PI / 2;
         return (
           <View key={i} style={[st.dot, {
-            width: d, height: d, borderRadius: d / 2,
+            width: d,
+            height: d,
+            borderRadius: d / 2,
             backgroundColor: isToday ? todayColor : PHASE_COLOR[phaseOf(i, cycleLength, periodLength)],
             left: c + R * Math.cos(a) - d / 2,
             top: c + R * Math.sin(a) - d / 2,
           }]}>
-            {isToday && <AppText style={st.todayNum}>{toFa(todayIndex + 1)}</AppText>}
+            {isToday && <AppText style={[st.todayNum, { fontSize: size / 35, }]}>{toFa(todayIndex + 1)}</AppText>}
           </View>
         );
       })}
@@ -46,7 +49,7 @@ export default function CycleRing({ cycleLength, periodLength, todayIndex, cente
 
 const st = StyleSheet.create({
   dot: { position: 'absolute', alignItems: 'center', justifyContent: 'center' },
-  todayNum: { color: '#fff', fontSize: 12, fontFamily: 'Vazirmatn-Bold' },
+  todayNum: { color: '#fff', fontFamily: 'Vazirmatn-Bold' },
   center: { position: 'absolute', borderRadius: 999, alignItems: 'center', justifyContent: 'center', padding: 12 },
   centerTitle: { color: '#fff', fontFamily: 'Vazirmatn-Bold', fontSize: 14, textAlign: 'center' },
   centerDate: { color: '#fff', fontSize: 10, marginTop: 8 },

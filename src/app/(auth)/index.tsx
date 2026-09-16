@@ -1,7 +1,8 @@
+import { useAppSelector } from "@/redux/hooks";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 // 1. Prevent Expo from auto-hiding the native splash screen immediately
 SplashScreen.preventAutoHideAsync();
@@ -9,20 +10,26 @@ SplashScreen.preventAutoHideAsync();
 export default function Splash() {
   const router = useRouter();
   const [isAppReady, setIsAppReady] = useState(false);
-
+  const user = useAppSelector((s) => s.userSlice)
   useEffect(() => {
     async function prepare() {
       try {
         // 2. Simulate loading (e.g., checking auth state, loading fonts, or fetching initial data)
         // Replace this setTimeout with your actual async logic (e.g., await checkAuth())
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // 3. Navigate to the target screen
-        router.replace('/(auth)/welcome');
+
+        if (user) {
+          router.replace('/(main)/HomeScreen');
+        } else {
+          router.replace('/(auth)/welcome');
+
+        }
       } catch (e) {
         console.warn("Error during splash screen preparation:", e);
         // Fallback navigation in case of error
-        router.replace('/(auth)/welcome');
+        // router.replace('/(auth)/welcome');
       } finally {
         // 4. Hide the native splash screen and mark app as ready
         await SplashScreen.hideAsync();
