@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 
 
 export default function ArticleDetailScreen({  route }: any) {
-  const navigation = useRouter()
+  const router = useRouter()
 
   const a = route?.params?.article;
   
@@ -16,7 +16,7 @@ export default function ArticleDetailScreen({  route }: any) {
   
   return (
     <View style={s.container}>
-      <ScreenHeader title="" onBack={() => navigation.back()} />
+      <ScreenHeader title="" onBack={() => router.back()} />
       <ScrollView contentContainerStyle={s.body}>
         <View style={s.author}>
           <View style={s.thumb}><Ionicons name="person" size={22} color={colors.sub} /></View>
@@ -38,7 +38,7 @@ export default function ArticleDetailScreen({  route }: any) {
       </ScrollView>
       <View style={s.bottom}>
         <TextInput style={s.commentInput} placeholder="نظر خود را وارد کنید" placeholderTextColor={colors.sub} />
-        <TouchableOpacity onPress={() => navigation.navigate('/(pages)/CommentScreen',
+        <TouchableOpacity onPress={() => router.navigate('/(pages)/CommentScreen',
           // { article: a }
         )}>
           <Ionicons name="chevron-back" size={18} color={colors.sub} />

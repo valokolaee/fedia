@@ -3,8 +3,9 @@ import CIconGenerator from '@/components/myComponents/CIconGenerator';
 import SVGstor from '@/components/myComponents/CIconGenerator/SVGstor';
 import CText from '@/components/myComponents/CText';
 import PeriodCard from '@/components/PeriodCardSvgBg';
-// import PeriodCard from '@/components/PeriodCard';
 import { AppText } from '@/components/ui';
+import { setTokenResponseDtoSlice } from '@/redux/actions';
+import { useAppSelector } from '@/redux/hooks';
 import { colors } from '@/theme';
 import { addDays, daysBetween, faDate, jalaliToJs } from '@/utils/cycle';
 import { toFa } from '@/utils/fa';
@@ -12,9 +13,10 @@ import WebService, { IWebServiceFuncs } from '@/webService';
 import { useApi } from '@/webService/hooks/useApi';
 import { apis } from '@/webService/periodcycleApis';
 import { Ionicons } from '@expo/vector-icons';
-import { useRef } from 'react';
+import { useRouter } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
- 
+
 const Legend = ({ color, label }: any) => (
   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
     <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: color }} />
@@ -22,9 +24,12 @@ const Legend = ({ color, label }: any) => (
   </View>
 );
 
-export default function HomeScreen({ navigation, route }: any) {
+export default function HomeScreen({ route }: any) {
+  const router = useRouter()
+  const user = useAppSelector((s) => s.userSlice)
+
   const refWebService = useRef<IWebServiceFuncs>(null)
-  const { callApi,Loader } = useApi();
+  const { callApi, Loader } = useApi();
 
 
   const p = route?.params ?? {};
@@ -40,53 +45,37 @@ export default function HomeScreen({ navigation, route }: any) {
   const daysToNext = cycleLength - todayIndex;
   const centerTitle = daysToOv > 0 ? `${toFa(daysToOv)} روز\nتا تخمک گذاری` : `${toFa(daysToNext)} روز\nتا پریود بعدی`;
 
+  const _submit = async () => {
 
-  const _tst = async () => {
-
-    
-    const res = await callApi(
-      apis.auth.register({
-      birthDate: '1402/01/01',
-      firstName: 'mariam2',
-      lastName: 'alizadeh2',
-      pin: '12345678',
-      email: 'c2@g.com', // leading space removed
-      maritalStatus: 'single',
-      mobile: '09123456789',
-    }));
-    
+    const res = await callApi(apis.cycles.mine);
+    if (res.success) {
 
 
-    
-    console.log(res);
     }
-  
+    console.log(res);
 
 
+  }
 
+  const login = async () => {
+    const res = await callApi(apis.auth.login({ mobile: user.mobile, pin: user.pin }));
+    if (res.success) {
 
+      setTokenResponseDtoSlice(res.data)
+      // setUser(_loginDto)
+      // _navTo()
+      _submit()
+    }
+  }
 
-  // const { callApi, isLoading } = useApi();
-  // const [articles, setArticles] = useState<ArticleResponseDto[]>([]);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await callApi(apis.articles.list('Public'));
-  //     if (res.success) setArticles(res.data);
-  //     // res.data is typed as ArticleResponseDto[] — inferred, no manual generic
-  //   })();
-  // }, []);
-
+  useEffect(() => {
+    login()
+  }, [])
 
   return (
     <View style={s.container}>
 
       {Loader}
-
-      <TouchableOpacity onPress={_tst}>
-        <Ionicons name="ellipsis-vertical" size={20} color={colors.ink} />
-        {'cvhjiuhgjkjhg'}
-      </TouchableOpacity>
 
       <View style={s.header}>
         <View style={s.user}>
@@ -96,7 +85,7 @@ export default function HomeScreen({ navigation, route }: any) {
         <View style={s.headerIcons}>
 
           <Ionicons name="headset-outline" size={20} color={colors.ink} />
-          <TouchableOpacity onPress={() => navigation.navigate('Menu')}>
+          <TouchableOpacity onPress={() => router.navigate('/(pages)/MenuScreen')}>
             <Ionicons name="ellipsis-vertical" size={20} color={colors.ink} />
           </TouchableOpacity>
         </View>
@@ -117,12 +106,12 @@ export default function HomeScreen({ navigation, route }: any) {
 
         <View style={s.actions}>
 
-          <TouchableOpacity style={s.actGhost} onPress={() => navigation.navigate('AddSymptoms')}>
+          <TouchableOpacity style={s.actGhost} onPress={() => router.navigate('/(pages)/AddSymptomsScreen')}>
             <CIconGenerator xml={SVGstor.plusCircle} size={50} />
             <CText style={{ fontSize: 12 }} text={'افزودن علائم امروز'} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={s.actPrimary} onPress={() => navigation.navigate('EditPeriod')}>
+          <TouchableOpacity style={s.actPrimary}  >
             <CIconGenerator xml={SVGstor.bloodDropCircle} size={50} />
             <CText style={{ fontSize: 12 }} text={'ویرایش پریود'} />
           </TouchableOpacity>

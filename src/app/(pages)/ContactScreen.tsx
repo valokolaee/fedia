@@ -1,6 +1,7 @@
 import { AppText, ScreenHeader } from '@/components/ui';
 import { colors } from '@/theme';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 
@@ -13,10 +14,12 @@ const InfoRow = ({ icon, label, value }: any) => (
   </View>
 );
 
-export default function ContactScreen({ navigation }: any) {
+export default function ContactScreen() {
+  const router = useRouter()
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScreenHeader title="تماس با ما" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="تماس با ما" onBack={() => router.back()} />
       <ScrollView contentContainerStyle={s.body}>
         <InfoRow icon="mail-outline" label="آدرس ایمیل" value="Example@gmail.com" />
         <InfoRow icon="keypad-outline" label="شماره تماس" value="۰۹۱۱ ۵۴۴ ۲۳ ۵۴" />

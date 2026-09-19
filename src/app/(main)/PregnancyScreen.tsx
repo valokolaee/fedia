@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 
-export default function PregnancyScreen({ navigation }: any) {
+export default function PregnancyScreen( ) {
   const [v, setV] = useState('بله');
-  // const router = useRouter()
+
   return (
     <View style={s.container}>
       <ScreenHeader title="بارداری"
@@ -15,7 +15,12 @@ export default function PregnancyScreen({ navigation }: any) {
       <View style={s.body}>
         <AppText style={s.q}>آیا قصد بارداری در ۱۲ ماه آینده را دارید؟</AppText>
         {['بله', 'خیر', 'هنوز تصمیم نگرفتم', 'مجردم'].map(o => (
-          <OptionRow key={o} label={o} selected={v === o} onPress={() => setV(o)} />
+          <OptionRow
+            key={o}
+            label={o}
+            selected={v === o}
+            onPress={() => setV(o)}
+          />
         ))}
       </View>
     </View>

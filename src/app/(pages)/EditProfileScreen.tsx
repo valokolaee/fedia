@@ -5,16 +5,19 @@ import { colors } from '@/theme';
 import { AppText, ScreenHeader } from '@/components/ui';
 import { Button, Dropdown, Field, RadioRow } from '@/components/Form';
 import { MONTHS, range } from '@/utils/fa';
+import { useRouter } from 'expo-router';
 
 
 
-export default function EditProfileScreen({ navigation, route }: any) {
+export default function EditProfileScreen({   route }: any) {
+    const router = useRouter()
+  
   const [f, setF] = useState<any>({ first: '', last: '', phone: '', marital: '', day: null, month: null, year: null, ...route?.params });
   const set = (k: string) => (v: any) => setF((p: any) => ({ ...p, [k]: v }));
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.card }}>
-      <ScreenHeader title="ویرایش پروفایل" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="ویرایش پروفایل" onBack={() => router.back()} />
       <ScrollView contentContainerStyle={s.body} keyboardShouldPersistTaps="handled">
         <Field label="نام" placeholder="نام خود را وارد کنید" value={f.first} onChangeText={set('first')} />
         <Field label="نام خانوادگی" placeholder="نام خانوادگی خود را وارد کنید" value={f.last} onChangeText={set('last')} />
@@ -28,7 +31,7 @@ export default function EditProfileScreen({ navigation, route }: any) {
           <Dropdown placeholder="ماه" options={MONTHS} value={f.month} onChange={set('month')} style={s.dobBox} />
           <Dropdown placeholder="سال" options={range(1340, 1390)} value={f.year} onChange={set('year')} style={s.dobBox} />
         </View>
-        <Button label="ثبت ویرایش" style={{ marginTop: 24 }} onPress={() => navigation.goBack()} />
+        <Button label="ثبت ویرایش" style={{ marginTop: 24 }} onPress={() => router.back()} />
       </ScrollView>
     </View>
   );

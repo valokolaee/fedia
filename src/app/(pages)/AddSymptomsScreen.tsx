@@ -3,8 +3,10 @@ import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { addDays, jsToJalali } from '@/utils/cycle';
 import { colors } from '@/theme';
-import { AppText, NavArrows, OptionRow, ProgressDots, ScreenHeader } from '@/components/ui';
+import { AppText, OptionRow, ProgressDots, ScreenHeader } from '@/components/ui';
 import { MONTHS, toFa } from '@/utils/fa';
+import { useRouter } from 'expo-router';
+import { NavArrows } from '@/components/NavArrows';
 
 
 const WEEK = ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه'];
@@ -97,7 +99,8 @@ const Single = ({ q, options, value, onChange }: any) => (
 );
 
 /* ---------- screen ---------- */
-export default function AddSymptomsScreen({ navigation }: any) {
+export default function AddSymptomsScreen( ) {
+  const router = useRouter()
   const [step, setStep] = useState(1);
   const [date, setDate] = useState(new Date());
   const [bleeding, setBleeding] = useState<string | null>(null);
@@ -118,12 +121,12 @@ export default function AddSymptomsScreen({ navigation }: any) {
     const record = { date: date.toISOString(), bleeding, pain, area, physical, mood, activity };
     // TODO: persist → AsyncStorage / your API / context
     console.log('symptom record:', record);
-    navigation.goBack();
+    router.back();
   };
 
   return (
     <View style={st.container}>
-      <ScreenHeader title="افزودن علائم" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="افزودن علائم" onBack={() => router.back()} />
       <CalendarStrip selected={date} onSelect={setDate} />
 
       <ScrollView contentContainerStyle={st.body} showsVerticalScrollIndicator={false}>
@@ -145,7 +148,7 @@ export default function AddSymptomsScreen({ navigation }: any) {
       <View style={st.footer}>
         <View style={{ flex: 1 }}><ProgressDots step={step} total={6} /></View>
         <NavArrows
-          onBack={() => (step > 1 ? setStep(step - 1) : navigation.goBack())}
+          onBack={() => (step > 1 ? setStep(step - 1) : router.back())}
           onNext={() => (step < 6 ? setStep(step + 1) : save())} />
       </View>
     </View>

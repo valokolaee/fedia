@@ -28,8 +28,8 @@ export default function Splash() {
         }
       } catch (e) {
         console.warn("Error during splash screen preparation:", e);
-        // Fallback navigation in case of error
-        // router.replace('/(auth)/welcome');
+
+        
       } finally {
         // 4. Hide the native splash screen and mark app as ready
         await SplashScreen.hideAsync();
@@ -61,8 +61,7 @@ export default function Splash() {
     );
   }
 
-  // Return null after navigation to avoid rendering anything else
-  return null;
+   return null;
 }
 
 const styles = StyleSheet.create({

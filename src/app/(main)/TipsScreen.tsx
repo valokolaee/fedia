@@ -3,6 +3,7 @@ import CIconGenerator from '@/components/myComponents/CIconGenerator';
 import SVGstor from '@/components/myComponents/CIconGenerator/SVGstor';
 import { AppText } from '@/components/ui';
 import { colors } from '@/theme';
+import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 
@@ -20,13 +21,15 @@ const TIPS = [
 
 
 
-export default function TipsScreen({ navigation }: any) {
+export default function TipsScreen() {
+    const router = useRouter()
+  
   var { width } = useWindowDimensions();
 
   width = width / 2.3
   return (
     <View style={s.container}>
-      <UserHeader onMenu={() => navigation.navigate('Menu')} />
+      <UserHeader onMenu={() => router.navigate('/(pages)/MenuScreen')} />
       <ScrollView contentContainerStyle={s.body}>
         <View style={s.grid}>
           {TIPS.map(t => (

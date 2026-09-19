@@ -3,9 +3,11 @@ import UserHeader from '@/components/UserHeader';
 import { Spacing } from '@/constants/theme';
 import { colors } from '@/theme';
 import { toFa } from '@/utils/fa';
+import { useApi } from '@/webService/hooks/useApi';
+import { apis } from '@/webService/periodcycleApis';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 
 
@@ -23,7 +25,8 @@ export const ARTICLES = [
 ];
 const CATS = ['همه', 'پریود', 'چرخه پریود', 'خلق و خو', 'سیکل زندگی', 'تغذیه'];
 
-export default function ArticlesScreen({ navigation }: any) {
+export default function ArticlesScreen() {
+   const { callApi, Loader } = useApi();
   const router = useRouter()
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('همه');
@@ -40,11 +43,27 @@ export default function ArticlesScreen({ navigation }: any) {
       });
   }
   
+  const _submit = async () => {
+
+    const res = await callApi(apis.cycles.mine);
+    if (res.success) {
+
+
+    }
+    console.log(res);
+
+
+  }
+
+  useEffect(() => {
+    _submit()
+  }, [])
 
 
   return (
     <View style={s.container}>
-      <UserHeader onMenu={() => navigation.navigate('Menu')} />
+   {Loader}
+      <UserHeader onMenu={() => router.navigate('/(pages)/MenuScreen')} />
       <View style={s.searchRow}>
         <View style={s.searchBox}>
           <TextInput value={q} onChangeText={setQ} placeholder="جستجو در مقالات" placeholderTextColor={colors.sub} style={s.searchInput} />
@@ -70,8 +89,7 @@ export default function ArticlesScreen({ navigation }: any) {
           renderItem={({ item }) => (
             <TouchableOpacity style={s.card}
             onPress={_navTo(item)}
-              // onPress={() => navigation.navigate('ArticleDetail', { article: item })}
-            >
+             >
               <Ionicons name="heart-outline" size={18} color={colors.sub} />
               <View style={s.cardBody}>
                 <AppText style={s.title} numberOfLines={2}>{item.title}</AppText>

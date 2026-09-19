@@ -1,17 +1,16 @@
-import React from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 import { AppText, ScreenHeader } from '@/components/ui';
 import { colors } from '@/theme';
 import { toFa } from '@/utils/fa';
+import { Ionicons } from '@expo/vector-icons';
+import { Href, useRouter } from 'expo-router';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 
-export default function MenuScreen({ navigation }: any) {
-  const Item = ({ icon, label, route, danger }: any) => (
-    <TouchableOpacity style={s.item} onPress={() =>
-      route === 'Logout'
-        ? navigation.reset({ index: 0, routes: [{ name: 'Welcome' }] })
-        : navigation.navigate(route)}>
+export default function MenuScreen() {
+  const router = useRouter()
+
+  const Item = ({ icon, label, route, danger }: { icon: any; label: string; route?: Href; danger?: boolean }) => (
+    <TouchableOpacity style={s.item} onPress={() => !route ? router.replace('/(auth)/welcome') : router.navigate(route!)}>
       <Ionicons name={icon} size={18} color={danger ? colors.primary : colors.sub} />
       <AppText style={[s.label, danger && { color: colors.primary }]}>{label}</AppText>
     </TouchableOpacity>
@@ -19,13 +18,13 @@ export default function MenuScreen({ navigation }: any) {
 
   return (
     <View style={s.container}>
-      <ScreenHeader title="منو" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="منو" onBack={() => router.back()} />
       <View style={s.body}>
-        <Item icon="create-outline" label="ویرایش پروفایل" route="EditProfile" />
-        <Item icon="sync-outline" label="سابقه سیکل" route="History" />
-        <Item icon="information-circle-outline" label="درباره ما" route="About" />
-        <Item icon="call-outline" label="تماس با ما" route="Contact" />
-        <Item icon="log-out-outline" label="خروج" route="Logout" danger />
+        <Item icon="create-outline" label="ویرایش پروفایل" route="/(pages)/EditProfileScreen" />
+        <Item icon="sync-outline" label="سابقه سیکل" route="/(pages)/HistoryScreen" />
+        <Item icon="information-circle-outline" label="درباره ما" route="/(pages)/AboutScreen" />
+        <Item icon="call-outline" label="تماس با ما" route="/(pages)/ContactScreen" />
+        <Item icon="log-out-outline" label="خروج" danger />
       </View>
       <AppText style={s.version}>نسخه {toFa('1.8.7.1')}</AppText>
     </View>

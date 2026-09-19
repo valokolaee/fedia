@@ -4,6 +4,7 @@ import { AppText, ScreenHeader } from '@/components/ui';
 import { colors } from '@/theme';
 import { toFa } from '@/utils/fa';
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const SYMPTOMS = [
@@ -21,10 +22,12 @@ const RECORDS = [
   { id: '4', range: '۴ تیر - ۹ تیر', cycle: 22 },
 ];
 
-export default function HistoryScreen({ navigation }: any) {
+export default function HistoryScreen() {
+  const router = useRouter()
+
   return (
     <View style={s.container}>
-      <ScreenHeader title="سابقه سیکل" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="سابقه سیکل" onBack={() => router.back()} />
       <ScrollView contentContainerStyle={s.body}>
         <View style={s.userCard}>
           <View style={s.avatar}>
@@ -34,7 +37,7 @@ export default function HistoryScreen({ navigation }: any) {
             <AppText style={{ fontSize: 10, color: colors.sub }}>سلام !</AppText>
             <AppText style={{ fontFamily: 'Vazirmatn-Bold', fontSize: 13 }}>مریم علیزاده</AppText>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}><Ionicons name="create-outline" size={18} color={colors.ink} /></TouchableOpacity>
+          <TouchableOpacity onPress={() => router.navigate('/(pages)/EditProfileScreen')}><Ionicons name="create-outline" size={18} color={colors.ink} /></TouchableOpacity>
         </View>
 
         <View style={s.stats}>
@@ -44,7 +47,7 @@ export default function HistoryScreen({ navigation }: any) {
           </View>
           <View style={s.stat}>
             <View style={s.statIcon}>
-            <CIconGenerator xml={SVGstor.mobile}/>
+              <CIconGenerator xml={SVGstor.mobile} />
               {/* <Ionicons name="drop-outline" size={16} color={colors.primary} /> */}
             </View>
             <View><AppText style={s.statVal}>{toFa(5)} روز</AppText><AppText style={s.statLabel}>طول پریود</AppText></View>
@@ -59,7 +62,7 @@ export default function HistoryScreen({ navigation }: any) {
         <View style={s.symCard}>
           <View style={s.symHead}>
             <AppText style={{ fontFamily: 'Vazirmatn-Bold', fontSize: 12 }}>علائم امروز شما</AppText>
-            <TouchableOpacity style={s.addLink} onPress={() => navigation.navigate('AddSymptoms')}>
+            <TouchableOpacity style={s.addLink} onPress={() => router.navigate('/(pages)/AddSymptomsScreen')}>
               <Ionicons name="add" size={14} color={colors.teal} />
               <AppText style={{ fontSize: 10, color: colors.teal }}>افزودن علامت جدید</AppText>
             </TouchableOpacity>
@@ -67,7 +70,7 @@ export default function HistoryScreen({ navigation }: any) {
           {SYMPTOMS.map(r => (
             <View key={r.label} style={s.row}>
               <View style={s.badge}>
-              <CIconGenerator xml={SVGstor.bottomNav.articles}/>
+                <CIconGenerator xml={SVGstor.bottomNav.articles} />
               </View>
               <AppText style={s.rowLabel}>{r.label}</AppText>
               <View style={{ flex: 1 }} />

@@ -6,16 +6,16 @@ import React, { useState } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 
 
-export default function CommentScreen({ navigation }: any) {
-  const [msg, setMsg] = useState('');
+export default function CommentScreen( ) {
   const router=useRouter()
+  const [msg, setMsg] = useState('');
   return (
     <View style={s.container}>
       <ScreenHeader title="ثبت نظر شما برای این مقاله" onBack={() => router.back()} />
       <View style={s.body}>
         <AppText style={s.label}>پیام</AppText>
         <TextInput multiline textAlignVertical="top" style={s.area} value={msg} onChangeText={setMsg} placeholder="متن پیام خود را وارد کنید" placeholderTextColor={colors.sub} />
-        <Button label="ثبت نظر" color="#8B85D9" disabled={!msg.trim()} onPress={() => navigation.goBack()} />
+        <Button label="ثبت نظر" color="#8B85D9" disabled={!msg.trim()} onPress={() => router.back()} />
       </View>
     </View>
   );

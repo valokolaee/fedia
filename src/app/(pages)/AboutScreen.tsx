@@ -3,6 +3,7 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AppText, ScreenHeader } from '@/components/ui';
 import { colors } from '@/theme';
+import { useRouter } from 'expo-router';
 
 const DocCard = ({ name, role }: any) => (
   <View style={s.doc}>
@@ -14,10 +15,11 @@ const DocCard = ({ name, role }: any) => (
   </View>
 );
 
-export default function AboutScreen({ navigation }: any) {
+export default function AboutScreen( ) {
+    const router = useRouter()
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScreenHeader title="درباره ما" onBack={() => navigation.goBack()} />
+      <ScreenHeader title="درباره ما" onBack={() => router.back()} />
       <ScrollView contentContainerStyle={s.body}>
         <DocCard name="دکتر صغری برومند" role="متخصص زنان و زایمان" />
         <View style={s.card}>

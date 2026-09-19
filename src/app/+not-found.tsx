@@ -1,9 +1,12 @@
+import { useRouter } from "expo-router"
 import { I18nManager, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Force RTL for the app if not already done
 I18nManager.forceRTL(true);
 
-const NotFoundScreen = () => (
+const NotFoundScreen = () => {
+    const router = useRouter()
+ return (
   <View style={styles.container}>
     <Text style={styles.emoji}>🌸</Text>
     <Text style={styles.title}>صفحه پیدا نشد!</Text>
@@ -11,12 +14,12 @@ const NotFoundScreen = () => (
 
     <TouchableOpacity
       style={styles.primaryBtn}
-      onPress={() => navigation.navigate('Dashboard')}
+      onPress={() => router.navigate('/(auth)/login')}
     >
       <Text style={styles.primaryBtnText}>بازگشت به داشبورد سیکل</Text>
     </TouchableOpacity>
   </View>
-);
+)};
 
 export default NotFoundScreen;
 
